@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  interview-service:
+    build: .
+    container_name: interview-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/interview_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - interview-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: interview_db
+    ports:
+      - "3306:3306"
+    networks:
+      - interview-network
+
+networks:
+  interview-network:
+    driver: bridge
